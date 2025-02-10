@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard | Sentiment Analysis</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl font-semibold text-gray-800">Sentiment Analysis Tool</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-gray-600">Welcome, <span class="font-semibold">{{ username }}</span>!</span>
+                <a 
+                    href="{{ url_for('logout') }}"
+                    class="text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-3xl mx-auto px-4 py-12">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">YouTube Comment Analysis</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Analyze the sentiment of comments on any YouTube video. Simply paste the video URL below to get started.
+                </p>
+            </div>
+
+            <form 
+                action="{{ url_for('analyze') }}" 
+                method="POST"
+                class="max-w-2xl mx-auto"
+            >
+                <div class="relative mb-6">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <!-- URL Icon -->
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                    </div>
+                    <input 
+                        type="text" 
+                        name="video_url" 
+                        placeholder="Paste YouTube video URL here (e.g., https://www.youtube.com/watch?v=...)" 
+                        required
+                        class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-500 transition duration-200 outline-none"
+                    >
+                </div>
+
+                <button 
+                    type="submit"
+                    class="w-full bg-blue-600 text-white font-semibold py-4 rounded-lg hover:bg-blue-700 transition duration-200 flex items-center justify-center gap-2"
+                >
+                    <!-- Analysis Icon -->
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Analyze Comments
+                </button>
+            </form>
+
+            <div class="mt-8 text-center text-sm text-gray-500">
+                <p>The analysis may take a few moments depending on the number of comments.</p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

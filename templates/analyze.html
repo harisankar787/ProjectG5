@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyze YouTube Comments</title>
+
+    <!-- Preload Roboto Font -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/roboto/v29/KFOmCnqEu92Fr1Mu4mxK.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+
+    <!-- Minified Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Fallback Font -->
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        h1 {
+            font-family: 'Roboto', Arial, sans-serif;
+            font-display: swap;
+            color: #dc3545; /* YouTube red */
+            margin-bottom: 20px;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .btn-primary {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            width: 100%;
+            max-width: 500px;
+            padding: 10px;
+        }
+        footer {
+            background-color: #343a40;
+            text-align: center;
+            padding: 10px;
+            color: white;
+            margin-top: auto;
+        }
+        .dark-mode {
+            background-color: #212529;
+            color: #f8f9fa;
+        }
+        .dark-mode footer {
+            background-color: #000000;
+        }
+        .dark-mode .results {
+            background-color: #343a40;
+            color: white;
+            border-color: #444;
+        }
+        .dark-mode .list-group-item {
+            background-color: #343a40;
+            color: white;
+        }
+        .loader {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #dc3545;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analyze YouTube Video Comments</h1>
+        <form method="POST" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="video_url">Paste YouTube Video URL:</label>
+                <input type="text" class="form-control" id="video_url" name="video_url" 
+                       placeholder="https://www.youtube.com/watch?v=YOUR_VIDEO_ID" 
+                       required aria-label="YouTube video URL">
+            </div>
+            <button type="submit" class="btn btn-primary">Analyze</button>
+            <div class="loader" id="loader"></div>
+        </form>
+
+        {% if error %}
+        <div class="alert alert-danger mt-3" role="alert" aria-live="polite">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if positive is not none %}
+        <div class="results card mt-4">
+            <h2 class="card-header">Sentiment Analysis Results</h2>
+            <div class="card-body">
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar"  aria-valuenow="{{ positive }}" aria-valuemin="0" aria-valuemax="100">Positive: {{ positive }}%</div>
+                    <div class="progress-bar bg-warning" role="progressbar"  aria-valuenow="{{ neutral }}" aria-valuemin="0" aria-valuemax="100">Neutral: {{ neutral }}%</div>
+                    <div class="progress-bar bg-danger" role="progressbar"  aria-valuenow="{{ negative }}" aria-valuemin="0" aria-valuemax="100">Negative: {{ negative }}%</div>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">Positive Comments: <strong>{{ positive }}%</strong></li>
+                    <li class="list-group-item">Neutral Comments: <strong>{{ neutral }}%</strong></li>
+                    <li class="list-group-item">Negative Comments: <strong>{{ negative }}%</strong></li>
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <footer>
+        <p>&copy; 2024 YouTube Sentiment Analysis Tool</p>
+        <button class="btn btn-secondary" id="toggleMode">Toggle Dark Mode</button>
+    </footer>
+
+    <!-- Async JS Loading -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" async></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" defer></script>
+
+    <script>
+        const toggleModeButton = document.getElementById("toggleMode");
+        toggleModeButton.addEventListener("click", () => {
+            document.body.classList.toggle("dark-mode");
+        });
+
+        function validateForm() {
+            const url = document.getElementById("video_url").value;
+            const urlPattern = /^(https:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/(watch\?v=|v\/|u\/\w\/|embed\/|shorts\/)?[\w-]{11}$/;
+            if (!urlPattern.test(url)) {
+                alert("Please enter a valid YouTube URL.");
+                return false;
+            }
+            document.getElementById("loader").style.display = "block";
+            return true;
+        }
+    </script>
+</body>
+</html>
